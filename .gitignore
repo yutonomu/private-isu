@@ -16,3 +16,6 @@ portal/tmp
 !/portal/log/.keep
 /portal/tmp
 .vagrant
+
+# nginx access log mounted from docker (webapp/compose.yml)
+webapp/logs/
