@@ -48,6 +48,8 @@ services:
     volumes:
       - mysql:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d
+      - ./etc/mysql/conf.d:/etc/mysql/conf.d
+      - ./logs/mysql:/var/log/mysql
     ports:
       - "13306:3306"
     networks:
