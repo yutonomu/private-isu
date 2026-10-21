@@ -10,13 +10,18 @@ import { parseHTML } from "k6/html";
 // url関数をimport
 import { url } from "./config.js";
 
+// getAccount 関数を accounts.js から import
+import { getAccount } from "./accounts.js";
+
 // ベンチマーカーが実行するシナリオ関数
 // ログインしてからコメントを投稿する
 export default function () {
+  // ランダムに1アカウントを選択
+  const account = getAccount();
   // /login に対してアカウント名とパスワードを送信
   const login_res = http.post(url("/login"), {
-    account_name: "terra",
-    password: "terraterra",
+    account_name: account.account_name,
+    password: account.password,
   });
 
   // レスポンスのステータスコードが200であることを確認
@@ -24,8 +29,8 @@ export default function () {
     "is status 200": (r) => r.status === 200,
   });
 
-  // ユーザーページ /@terra をGET
-  const res = http.get(url("/@terra"));
+  // ログインしたユーザーのページ /@アカウント名 をGET
+  const res = http.get(url(`/@${account.account_name}`));
 
   // レスポンスの内容をHTMLとして解釈
   const doc = parseHTML(res.body);

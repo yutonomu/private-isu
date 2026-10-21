@@ -7,15 +7,21 @@ import { parseHTML } from "k6/html";
 // リクエスト対象URLを生成する関数をimport
 import { url } from "./config.js";
 
+// getAccount 関数を accounts.js から import
+import { getAccount } from "./accounts.js";
+
 // ファイルをバイナリとして開く
 const testImage = open("testimage.jpg", "b");
 
 // k6が実行する関数
 // ログインして画像を投稿するシナリオ
 export default function () {
+  // ランダムに1アカウントを選択
+  const account = getAccount();
+  // /login に対して送信
   const res = http.post(url("/login"), {
-    account_name: "terra",
-    password: "terraterra",
+    account_name: account.account_name,
+    password: account.password,
   });
   const doc = parseHTML(res.body);
   const token = doc.find('input[name="csrf_token"]').first().attr("value");
